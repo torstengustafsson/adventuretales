@@ -1,0 +1,53 @@
+
+Single responsibility principle should be followed at all times!
+
+Some of the most important classes are described below:
+
+core folder:
+	GameRenderer
+		Responsible for rendering objects to scene.
+		Contains all objects in a vector which is sent as a pointer to other classes.
+
+	GameEngine
+		Handles game logic.
+		Movement of objects.
+		Collision between objects.
+
+	GameController
+		Handles in-game events.
+		Handles most keyboard input. (indirectly using an instance of InputHandler)
+		Player level up logic. (This class sets player variables)
+		Handles spawning of objects. (indirectly using an instance of MapHandler)
+		Contains the current scene (objects), which is passed around to GameEngine, Camera and others for handling of game logic etc.
+
+	Resources
+		Stores textures, texts and sounds.
+		std::map is used as container to ensure no duplicates are loaded.
+
+	MapHandler
+		Stores all the maps in .csv format.
+		Used by GameController to load each map.
+	
+	PlayerData:
+		The "Actual" abstract player. Contains information on which characters are currently in use, current player gold etc. This is the information used when saving/loading a game.
+
+world folder:
+	Player
+		The player object (not much more).
+		Responds to keyboard input etc.
+
+	Object
+		Class for a game object.
+		Player is a subclass of Object.
+		Contains size and textures for one object.
+		GameController uses a vector of Object pointers (the current scene) which is passed around to many other objects.
+		Can be an enemy, npc, or other.
+
+	Camera
+		Handles the position of objects in the world according to the current camera position.
+		Moves objects relative to player. Stores screen dimensions and adjust world after those.
+
+characters folder:
+	Character:
+		Contains information about a playable character. Characters can be used in battle and level up and gains stats. A character may have a set of items (the Inventory class), and a set of personality traits (the Traits class).
+		Enemies are subclasses of character, since they use the same kind of stats on combat.
