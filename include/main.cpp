@@ -1,4 +1,4 @@
-#include "core/AdventureTales.h"
+#include "core/inc/AdventureTales.h"
 
 //Time variables shared globally (see Globals.h).
 float curr_time = 0;
