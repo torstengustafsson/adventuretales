@@ -51,11 +51,11 @@ GameController::GameController(Player* _player, Resources* _res)
 	}
 	const auto& characters = player_data->get_characters();
 	if(dynamic_cast<Viking*>(characters[0].get()))
-		player->change_texture(resources->get_texture("../data/sprites/world/characters/character_viking.png"));
+		player->change_texture(resources->get_texture(data_path + "/sprites/world/characters/character_viking.png"));
 	if(dynamic_cast<Archer*>(characters[0].get()))
-		player->change_texture(resources->get_texture("../data/sprites/world/characters/character_archer.png"));
+		player->change_texture(resources->get_texture(data_path + "/sprites/world/characters/character_archer.png"));
 	//if(dynamic_cast<Knight*>(characters[0].get()))
-	//	player->change_texture(resources->get_texture("../data/sprites/world/characters/character_knight.png"));
+	//	player->change_texture(resources->get_texture(data_path + "/sprites/world/characters/character_knight.png"));
 	cout << "\n";
 }
 

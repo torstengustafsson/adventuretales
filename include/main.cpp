@@ -4,6 +4,7 @@
 float curr_time = 0;
 float curr_dt = 0;
 bool quit = false;
+std::string data_path = "../data";
 
 int main( int argc, char* args[] )
 {

@@ -68,8 +68,8 @@ void Text::render( int x, int y, SDL_Point* center, SDL_RendererFlip flip )
 void Text::set_font(int size, bool bold)
 {
 	string path;
-	if(!bold) path = "../data/fonts/imperator/Imperator.ttf";
-	else 	  path = "../data/fonts/imperator/Imperator Bold.ttf";
+	if(!bold) path = data_path + "/fonts/imperator/Imperator.ttf";
+	else 	  path = data_path + "/fonts/imperator/Imperator Bold.ttf";
 	gFont = TTF_OpenFont( path.c_str(), size );
 	
 	if( gFont == NULL )

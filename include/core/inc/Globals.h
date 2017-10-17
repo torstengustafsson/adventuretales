@@ -16,3 +16,5 @@ extern bool quit;
 //Initialized by main and then handled by GameController class.
 extern float curr_time;
 extern float curr_dt;
+
+extern std::string data_path;

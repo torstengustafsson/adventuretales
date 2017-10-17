@@ -5,26 +5,26 @@ MenuWorld::MenuWorld(Resources* _res, PlayerData* _pd, function<void(bool, strin
 {
 	player_data = _pd;
 	
-	textures["menu"] = resources->get_texture("../data/sprites/menu/menu_world.png");
-	textures["button"] = resources->get_texture("../data/sprites/menu/menu_world_item.png");
-	textures["button_flat"] = resources->get_texture("../data/sprites/menu/menu_world_item_flat.png");
-	textures["button_marked"] = resources->get_texture("../data/sprites/menu/menu_world_item_marked.png");
-	textures["button_flat_marked"] = resources->get_texture("../data/sprites/menu/menu_world_item_flat_marked.png");
+	textures["menu"] = resources->get_texture(data_path + "/sprites/menu/menu_world.png");
+	textures["button"] = resources->get_texture(data_path + "/sprites/menu/menu_world_item.png");
+	textures["button_flat"] = resources->get_texture(data_path + "/sprites/menu/menu_world_item_flat.png");
+	textures["button_marked"] = resources->get_texture(data_path + "/sprites/menu/menu_world_item_marked.png");
+	textures["button_flat_marked"] = resources->get_texture(data_path + "/sprites/menu/menu_world_item_flat_marked.png");
 	
 	//main world menu
 	texts["button1_text"] = resources->get_text("Continue", 22, true);
 	texts["button2_text"] = resources->get_text("Enter Tavern", 22, true);
 	texts["button3_text"] = resources->get_text("Exit Game", 22, true);
-	textures["char_item"] = resources->get_texture("../data/sprites/menu/menu_world_item_character.png");
-	textures["empty_item"] = resources->get_texture("../data/sprites/menu/menu_world_item_character_empty.png");
+	textures["char_item"] = resources->get_texture(data_path + "/sprites/menu/menu_world_item_character.png");
+	textures["empty_item"] = resources->get_texture(data_path + "/sprites/menu/menu_world_item_character_empty.png");
 	texts["empty_text"] = resources->get_text("Empty Slot", 22, true);
 	texts["empty_tips"] = resources->get_text("(Hire a new character in the Tavern)", 12, false);
-	textures["character_marked"] = resources->get_texture("../data/sprites/menu/menu_world_item_character_marked.png");
+	textures["character_marked"] = resources->get_texture(data_path + "/sprites/menu/menu_world_item_character_marked.png");
 
-	textures["char_item_big"] = resources->get_texture("../data/sprites/menu/menu_world_character_box.png");
-	textures["hp_bar_back_red"] = resources->get_texture("../data/sprites/menu/health_bar_big_back_red.png");
-	textures["hp_bar_back"] = resources->get_texture("../data/sprites/menu/health_bar_big_back.png");
-	textures["hp_bar"] = resources->get_texture("../data/sprites/menu/health_bar_big.png");
+	textures["char_item_big"] = resources->get_texture(data_path + "/sprites/menu/menu_world_character_box.png");
+	textures["hp_bar_back_red"] = resources->get_texture(data_path + "/sprites/menu/health_bar_big_back_red.png");
+	textures["hp_bar_back"] = resources->get_texture(data_path + "/sprites/menu/health_bar_big_back.png");
+	textures["hp_bar"] = resources->get_texture(data_path + "/sprites/menu/health_bar_big.png");
 }
 
 //Used when user resizes the window
