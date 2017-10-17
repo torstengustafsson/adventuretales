@@ -31,28 +31,27 @@ AdventureTales::AdventureTales()
 
 void AdventureTales::run()
 {
-	//While application is running
-	while( !quit )
+	while (!quit)
 	{
 		//User requests quit
-		while( SDL_PollEvent( &e ) != 0 )
-			if( e.type == SDL_QUIT )
+		while (SDL_PollEvent(&e) != 0)
+			if (e.type == SDL_QUIT)
 				quit = true;
 
 		//Handle game logic such as spawning new objects and events
 		game_controller->frame();
-		
+
 		//Handle object movements and collisions
-		if( !game_controller->paused() )
+		if (!game_controller->paused())
 			game_engine->frame(game_controller->get_objects());
-		
+
 		//Transform objects to fit player camera
 		camera->set_view(game_controller->get_objects(), game_renderer->get_width(), game_renderer->get_height());
-		
+
 		//Render scene
-		if(!game_controller->loadtime())
+		if (!game_controller->loadtime())
 			game_renderer->render_frame(game_controller->get_objects(), game_controller->get_active_menu());
-		
+
 		//cout << "FPS: " << 1 / curr_dt << "\n"; 
 	}
 	
