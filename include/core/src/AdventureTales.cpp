@@ -15,7 +15,7 @@ AdventureTales::AdventureTales()
 	
 	//The player object is the only object that is not bound to any map
 	player = unique_ptr<Player>(new Player(
-		resources->get_texture(data_path + "/sprites/world/characters/character_archer.png"), 
+		resources->get_texture("../data/sprites/world/characters/character_archer.png"), 
 		"player",	//name
 		0,0,0,0,	//positions are set after map loaded
 		game_renderer->get_width() / 2 - 16,	//camera x position

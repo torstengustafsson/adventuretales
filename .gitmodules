@@ -1,0 +1,12 @@
+[submodule "ext/SDL2"]
+	path = ext/SDL2
+	url = https://github.com/libsdl-org/SDL
+[submodule "ext/SDL2_image"]
+	path = ext/SDL2_image
+	url = https://github.com/libsdl-org/SDL_image
+[submodule "ext/SDL2_ttf"]
+	path = ext/SDL2_ttf
+	url = https://github.com/libsdl-org/SDL_ttf
+[submodule "ext/freetype"]
+	path = ext/freetype
+	url = https://github.com/freetype/freetype

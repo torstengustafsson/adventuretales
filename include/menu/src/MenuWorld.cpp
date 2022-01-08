@@ -4,27 +4,27 @@ MenuWorld::MenuWorld(Resources* _res, PlayerData* _pd, function<void(bool, strin
 	: Menu(_res, _set_game_paused)
 {
 	player_data = _pd;
-	
-	textures["menu"] = resources->get_texture(data_path + "/sprites/menu/menu_world.png");
-	textures["button"] = resources->get_texture(data_path + "/sprites/menu/menu_world_item.png");
-	textures["button_flat"] = resources->get_texture(data_path + "/sprites/menu/menu_world_item_flat.png");
-	textures["button_marked"] = resources->get_texture(data_path + "/sprites/menu/menu_world_item_marked.png");
-	textures["button_flat_marked"] = resources->get_texture(data_path + "/sprites/menu/menu_world_item_flat_marked.png");
-	
+
+	textures["menu"] = resources->get_texture("../data/sprites/menu/menu_world.png");
+	textures["button"] = resources->get_texture("../data/sprites/menu/menu_world_item.png");
+	textures["button_flat"] = resources->get_texture("../data/sprites/menu/menu_world_item_flat.png");
+	textures["button_marked"] = resources->get_texture("../data/sprites/menu/menu_world_item_marked.png");
+	textures["button_flat_marked"] = resources->get_texture("../data/sprites/menu/menu_world_item_flat_marked.png");
+
 	//main world menu
 	texts["button1_text"] = resources->get_text("Continue", 22, true);
 	texts["button2_text"] = resources->get_text("Enter Tavern", 22, true);
 	texts["button3_text"] = resources->get_text("Exit Game", 22, true);
-	textures["char_item"] = resources->get_texture(data_path + "/sprites/menu/menu_world_item_character.png");
-	textures["empty_item"] = resources->get_texture(data_path + "/sprites/menu/menu_world_item_character_empty.png");
+	textures["char_item"] = resources->get_texture("../data/sprites/menu/menu_world_item_character.png");
+	textures["empty_item"] = resources->get_texture("../data/sprites/menu/menu_world_item_character_empty.png");
 	texts["empty_text"] = resources->get_text("Empty Slot", 22, true);
 	texts["empty_tips"] = resources->get_text("(Hire a new character in the Tavern)", 12, false);
-	textures["character_marked"] = resources->get_texture(data_path + "/sprites/menu/menu_world_item_character_marked.png");
+	textures["character_marked"] = resources->get_texture("../data/sprites/menu/menu_world_item_character_marked.png");
 
-	textures["char_item_big"] = resources->get_texture(data_path + "/sprites/menu/menu_world_character_box.png");
-	textures["hp_bar_back_red"] = resources->get_texture(data_path + "/sprites/menu/health_bar_big_back_red.png");
-	textures["hp_bar_back"] = resources->get_texture(data_path + "/sprites/menu/health_bar_big_back.png");
-	textures["hp_bar"] = resources->get_texture(data_path + "/sprites/menu/health_bar_big.png");
+	textures["char_item_big"] = resources->get_texture("../data/sprites/menu/menu_world_character_box.png");
+	textures["hp_bar_back_red"] = resources->get_texture("../data/sprites/menu/health_bar_big_back_red.png");
+	textures["hp_bar_back"] = resources->get_texture("../data/sprites/menu/health_bar_big_back.png");
+	textures["hp_bar"] = resources->get_texture("../data/sprites/menu/health_bar_big.png");
 }
 
 //Used when user resizes the window
@@ -42,7 +42,7 @@ void MenuWorld::render()
 {
 	//always render base menu
 	textures["menu"]->render(scale_x(160), 0);
-	
+
 	if(submenu == 0)
 		render_main_world_menu();
 	if(submenu == 1)
@@ -58,7 +58,7 @@ void MenuWorld::render_main_world_menu()
 	const int button1_pos = y_adj + button_y_start;
 	const int button2_pos = y_adj + button_y_start + (button_size + y_separation);
 	const int button3_pos = y_adj + button_y_start + 2 * (button_size +y_separation);
-	
+
 	//Button setup
 	textures["button"]->render(scale_x(180), scale_y(button1_pos));
 	texts["button1_text"]->render(scale_x(210), scale_y(button1_pos + 22));
@@ -66,20 +66,20 @@ void MenuWorld::render_main_world_menu()
 	texts["button2_text"]->render(scale_x(195), scale_y(button2_pos + 22));
 	textures["button"]->render(scale_x(180), scale_y(button3_pos));
 	texts["button3_text"]->render(scale_x(205), scale_y(button3_pos + 22));
-	
+
 	//Right side character portraits. Prints every character, moving downwards.
 	int x = 380, y = 128, counter = 0;
 	for(auto& c : player_data->get_characters() )
 	{
 		textures["char_item"]->render( scale_x(x), scale_y(y_adj + y + counter * y_separation) );
 		c->render( scale_x(x + 20), scale_y(y_adj + y + counter * y_separation + 15), 0.5 * screen_h / 600 );
-		
+
 		//Stats
 		texts["char_name"] = resources->get_text(c->get_name() + " the " + c->get_character_type(), 16, true);
 		texts["char_level"] = resources->get_text("Level: " + to_string(c->get_level()), 12, true);
 		texts["char_name"]->render(scale_x(x + 70), scale_y(y_adj + y + counter * y_separation + 10));
 		texts["char_level"]->render(scale_x(x + 70), scale_y(y_adj + y + counter * y_separation + 30));
-		
+
 		texts["char_stats_att"] = resources->get_text("Attack: " + to_string(c->get_attack()), 10, true);
 		texts["char_stats_def"] = resources->get_text("Defense: " + to_string(c->get_defense()), 10, true);
 		texts["char_stats_vit"] = resources->get_text("Vitality: " + to_string(c->get_vitality()), 10, true);
@@ -90,10 +90,10 @@ void MenuWorld::render_main_world_menu()
 		texts["char_stats_vit"]->render(scale_x(x + 15), scale_y(y_adj + y + counter * y_separation + 70 + 2 * 10));
 		texts["char_stats_str"]->render(scale_x(x + 15), scale_y(y_adj + y + counter * y_separation + 70 + 3 * 10));
 		texts["char_stats_int"]->render(scale_x(x + 15), scale_y(y_adj + y + counter * y_separation + 70 + 4 * 10));
-		
+
 		//extra call to resize neccessary to prevent only last character being resized
 		resize();
-		
+
 		y += 128;
 		counter++;
 	}
@@ -105,7 +105,7 @@ void MenuWorld::render_main_world_menu()
 			texts["empty_text"]->render(scale_x(430), scale_y(128 + (128 + y_separation) * i + y_adj + 45));
 			texts["empty_tips"]->render(scale_x(395), scale_y(128 + (128 + y_separation) * i + y_adj + 75));
 		}
-	
+
 	//Button highlighting (to show the currently marked button)
 	if(marked_pos == 0) textures["button_marked"]->render(scale_x(176), scale_y(button1_pos-4));
 	if(marked_pos == 1) textures["button_marked"]->render(scale_x(176), scale_y(button2_pos-4));
@@ -119,14 +119,14 @@ void MenuWorld::render_character_menu()
 {
 	//used to access character stats
 	Character* active_character =  player_data->get_characters()[character_selected_index].get();
-	
+
 	//Upper character portrait
-	texts["character_name"] = resources->get_text(active_character->get_name() + " the " + 
+	texts["character_name"] = resources->get_text(active_character->get_name() + " the " +
 			active_character->get_character_type(), 22, true);
 	texts["character_name"]->render(scale_x(400 - texts["character_name"]->getWidth() / 2), scale_y(140));
 	textures["char_item_big"]->render( scale_x(336), scale_y(170) );
 	active_character->render( scale_x(366), scale_y(190), 1.0 * screen_h / 600 );
-	
+
 	//Button setup
 	int inv_size = active_character->get_inventory().size();
 	int traits_size = active_character->get_traits().size();
@@ -141,7 +141,7 @@ void MenuWorld::render_character_menu()
 	texts["button2_char_text"]->render(scale_x(460), scale_y(468));
 	textures["button"]->render(scale_x(320), scale_y(504));
 	texts["button3_char_text"]->render(scale_x(370), scale_y(526));
-	
+
 	//Stats
 	texts["char_level"] = resources->get_text("Level: " + to_string(active_character->get_level()), 18, true);
 	texts["experience"] = resources->get_text("Experience: " + to_string(active_character->get_experience()), 14, true);
@@ -151,7 +151,7 @@ void MenuWorld::render_character_menu()
 	texts["experience"]->render(scale_x(200), scale_y(340));
 	texts["next_level"]->render(scale_x(200), scale_y(360));
 	texts["line"]->render(scale_x(200), scale_y(370));
-	
+
 	texts["char_stats_att"] = resources->get_text("Attack: " + to_string(active_character->get_attack()), 14, true);
 	texts["char_stats_def"] = resources->get_text("Defense: " + to_string(active_character->get_defense()), 14, true);
 	texts["char_stats_vit"] = resources->get_text("Vitality: " + to_string(active_character->get_vitality()), 14, true);
@@ -162,8 +162,8 @@ void MenuWorld::render_character_menu()
 	texts["char_stats_vit"]->render(scale_x(200), scale_y(390 + 20 * 2));
 	texts["char_stats_str"]->render(scale_x(200), scale_y(390 + 20 * 3));
 	texts["char_stats_int"]->render(scale_x(200), scale_y(390 + 20 * 4));
-	
-	string hp_string = string("Hit points: ") + to_string(active_character->get_hit_points_current()) + 
+
+	string hp_string = string("Hit points: ") + to_string(active_character->get_hit_points_current()) +
 			string(" / ") + to_string(active_character->get_hit_points_max());
 	texts["hp_text"] = resources->get_text(hp_string, 12, true);
 	textures["hp_bar_back_red"]->render(scale_x(370), scale_y(340));
@@ -172,7 +172,7 @@ void MenuWorld::render_character_menu()
 	textures["hp_bar_back"]->render(scale_x(370), scale_y(340), &hp_bar_clip);
 	textures["hp_bar"]->render(scale_x(370), scale_y(340));
 	texts["hp_text"]->render(scale_x(400), scale_y(350));
-	
+
 	//Button highlighting (to show the currently marked button)
 	if(marked_pos == 0) textures["button_flat_marked"]->render(scale_x(426), scale_y(416));
 	if(marked_pos == 1) textures["button_flat_marked"]->render(scale_x(426), scale_y(456));
@@ -183,7 +183,7 @@ void MenuWorld::render_character_inventory_menu()
 {
 	//used to access character stats
 	Character* active_character =  player_data->get_characters()[character_selected_index].get();;
-	
+
 	//Button setup
 	texts["button1_inv_text"] = resources->get_text("All" , 18, true);
 	texts["button2_inv_text"] = resources->get_text("Weapons" , 18, true);
@@ -203,7 +203,7 @@ void MenuWorld::render_character_inventory_menu()
 	texts["button5_inv_text"]->render(scale_x(200 + (textures["button_flat"]->getWidth() - texts["button5_inv_text"]->getWidth()) / 2), scale_y(308));
 	textures["button"]->render(scale_x(320), scale_y(504));
 	texts["button6_inv_text"]->render(scale_x(370), scale_y(526));
-	
+
 	//TODO: Render the inventory
 	active_character->get_inventory();
 
@@ -227,8 +227,10 @@ void MenuWorld::handle_action()
 			set_game_paused(false, "MenuWorld");
 		}
 		if(marked_pos == 2)
-			quit = true;
-		
+		{
+			//quit = true;
+		}
+
 		for(unsigned int i = 0; i < player_data->get_characters().size(); i++)
 		{
 			if(marked_pos == 3 + i)
@@ -239,7 +241,7 @@ void MenuWorld::handle_action()
 			}
 		}
 	}
-	
+
 	else if( submenu == 1 )
 	{
 		if(marked_pos == 0)
@@ -254,7 +256,7 @@ void MenuWorld::handle_action()
 			submenu = 0;
 		}
 	}
-	
+
 	else if( submenu == 2 )
 	{
 		if(marked_pos == 5)
@@ -273,7 +275,7 @@ void MenuWorld::handle_input()
 	{
 		if(!button_pressed && marked_pos >= 3)
 		{
-			if(submenu == 0) 
+			if(submenu == 0)
 			{
 				marked_pos -= 3;
 			}
@@ -284,7 +286,7 @@ void MenuWorld::handle_input()
 	{
 		if(!button_pressed && marked_pos < 3)
 		{
-			if(submenu == 0) 
+			if(submenu == 0)
 			{
 				marked_pos += 3;
 			}
@@ -322,7 +324,7 @@ void MenuWorld::handle_input()
 		if(!button_pressed)
 		{
 			handle_action();
-			
+
 		}
 		button_pressed = true;
 	}

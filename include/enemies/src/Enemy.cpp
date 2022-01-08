@@ -1,8 +1,8 @@
 #include "enemies/inc/Enemy.h"
 
-Enemy::Enemy(Texture* _tex, string _name, int _x_tile_index, int _y_tile_index, int _behaviour,
+Enemy::Enemy(Texture* _tex, string _name, int _x_tile_index, int _y_tile_index, float* curr_dt, int _behaviour,
 	function<vector<Object*>()> _get_objects)
-	: MovingObject(_tex, _name, _x_tile_index, _y_tile_index, 0, 0, 0, 0, SDL_Rect{0,0,32,32}),
+	: MovingObject(_tex, _name, _x_tile_index, _y_tile_index, 0, 0, 0, 0, SDL_Rect{0,0,32,32}, curr_dt),
 	  behaviour{_behaviour}
 {
 	get_objects = _get_objects;
@@ -12,7 +12,7 @@ void Enemy::frame(int player_x, int player_y)
 {
 	want_to_move = false;
 	animation_state = moving ? ANIM_WALK : ANIM_IDLE;
-	
+
 	//Perform NPC motion between tiles
 	if(moving)
 	{
@@ -31,14 +31,14 @@ void Enemy::frame(int player_x, int player_y)
 			moving = false;
 		}
 	}
-	
+
 	animate();
-	
-	action_timer += curr_dt;
-	
+
+	action_timer += *curr_dt;
+
 	int player_distance = dist(node(player_x, player_y), node(get_x_tile(), get_y_tile()));
 	hunting_player = player_distance < 8 && player_distance != 1 ? true : false;
-	
+
 	if(!hunting_player)
 	{
 		if(behaviour == LOOKER && action_timer > 3.0 && !moving && generateRand() % 100 < 1)
@@ -46,7 +46,7 @@ void Enemy::frame(int player_x, int player_y)
 			direction = generateRand() % 4 + 1;
 			action_timer = 0.0;
 		}
-		
+
 		if(behaviour == MOVER && action_timer > 3.0 && !moving && generateRand() % 100 < 1)
 		{
 			direction = generateRand() % 4 + 1;
@@ -84,7 +84,7 @@ bool Enemy::collision(node n, vector<Object*> v)
 				collider = true;
 		}
 	}
-	
+
 	return ( collision && !collider );
 }
 
@@ -92,7 +92,7 @@ bool Enemy::collision(node n, vector<Object*> v)
 Enemy::node player_pos(0, 0);
 
 bool Enemy::h_fun::operator()(const node* h1, const node* h2) const
-{ 
+{
 	return dist(*h1, player_pos) + h1->dist > dist(*h2, player_pos) + h2->dist;
 }
 
@@ -100,14 +100,14 @@ bool Enemy::h_fun::operator()(const node* h1, const node* h2) const
 int Enemy::find_path(int x, int y)
 {
 	//maps x coordinate as x*10000. So if y > 10000 duplicates will be found and pathfinding will break.
-	//nodes map is required because otherwise standard containers will remove actual elements on pop(), 
+	//nodes map is required because otherwise standard containers will remove actual elements on pop(),
 	//breaking path.
 	map<int, unique_ptr<node>> nodes;
-	
+
 	player_pos = node(x, y);
 	priority_queue<node*, vector<node*>, h_fun> sorted_nodes;
 	set<node*> visited_nodes;
-	
+
 	nodes[get_x_tile()*10000 + get_y_tile()] = unique_ptr<node>(new node(get_x_tile(), get_y_tile()));
 	sorted_nodes.push( nodes[get_x_tile()*10000 + get_y_tile()].get() );
 
@@ -117,10 +117,10 @@ int Enemy::find_path(int x, int y)
 		if( C++ > 17 ) return 0; //'endless loop' breaker
 		node* current = sorted_nodes.top();
 		visited_nodes.emplace(current);
-		
-		
+
+
 		sorted_nodes.pop();
-		
+
 		if(*current == player_pos)
 		{
 			//Found! Remove path elements until we only have first step left
@@ -129,7 +129,7 @@ int Enemy::find_path(int x, int y)
 			{
 				path = path->prev;
 			}
-			
+
 			if(path->x == get_x_tile()-1 && path->y == get_y_tile())
 				return 1;	//left
 			else if(path->x == get_x_tile()+1 && path->y == get_y_tile())
@@ -147,7 +147,7 @@ int Enemy::find_path(int x, int y)
 				node(current->x, current->y+1, nodes[current->x*10000 + current->y].get()),
 				node(current->x, current->y-1, nodes[current->x*10000 + current->y].get())
 			};
-			
+
 			//check which new nodes we can add (we don't want to re-add nodes, and no colliders)
 			for(auto n : new_nodes)
 			{
@@ -160,8 +160,8 @@ int Enemy::find_path(int x, int y)
 				}
 			}
 		}
-		
+
 	}
-	
+
 	return 0;
 }

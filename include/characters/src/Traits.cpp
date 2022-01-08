@@ -1,4 +1,5 @@
 #include "characters/inc/Traits.h"
+#include <tuple>
 
 void Traits::add_trait(string name)
 {
@@ -111,7 +112,7 @@ vector<tuple<string,string,array<int,5>>> Traits::get_traits()
 	vector<tuple<string,string,array<int,5>>> v;
 	
 	for(auto& t : traits)
-		v.push_back(make_tuple(t.name, t.description, t.bonuses));
+		v.push_back(std::make_tuple(t.name, t.description, t.bonuses));
 	
 	return v;
 }

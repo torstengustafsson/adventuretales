@@ -38,7 +38,7 @@ Item* Resources::get_item(string name)
 
 void Resources::create_items()
 {
-	string path = data_path + "/sprites/items";
+	string path = "../data/sprites/items";
 	items_map["Iron Sword"] = unique_ptr<Item>(new Weapon(get_texture(path + "/weapons/iron_sword.png"), "Iron Sword", "Sword", 5));
 	items_map["Steel Helmet"] = unique_ptr<Item>(new Armor(get_texture(path + "/weapons/iron_sword.png"), "Steel Helmet", "Helmet", 1));
 	items_map["Healing Potion"] = unique_ptr<Item>(new Potion(get_texture(path + "/weapons/iron_sword.png"), "Healing Potion", "HP Restore", 10));

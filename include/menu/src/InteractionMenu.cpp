@@ -17,7 +17,7 @@ void InteractionMenu::resize()
 void InteractionMenu::render()
 {
 	//Background box
-	Texture* menu = resources->get_texture(data_path + "/sprites/menu/interaction_menu.png");
+	Texture* menu = resources->get_texture("../data/sprites/menu/interaction_menu.png");
 	menu->set_screen_dim(screen_w, screen_h);
 	menu->render(scale_x(0), scale_y(400));
 	

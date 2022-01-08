@@ -1,39 +1,22 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.13)
 
-set(PROJECT_NAME AdventureTales)
+project(Adventuretales)
 
-project(${PROJECT_NAME})
+add_subdirectory("ext/SDL2")
+add_subdirectory("ext/SDL2_image")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+# NOTE: (As of 2022/01/07) SDL_ttf does not work very well with CMake, so we use prebuilt .libs and includes directly
+# add_subdirectory("ext/SDL2_ttf")
+set(SDL_TTF_INCLUDE_DIR "ext/SDL2_ttf/SDL2_ttf-2.0.15-VC/include")
+set(SDL_TTF_LIB_DIR_x64 "ext/SDL2_ttf/SDL2_ttf-2.0.15-VC/lib/x64")
+
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++17")
 
 find_package(OpenGL REQUIRED)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
- #set the default path for built executables to the "bin" directory
- set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-
- #set the default path for built libraries to the "lib" directory
- set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
-
- #Specify Include Directory
- set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
-
-include_directories(${PROJECT_INCLUDE_DIR})
-include_directories(${OPENGL_INCLUDE_DIR})
-
-#Set SDL2 path (TODO: find it instead or hardcoding it)
-set(SDL2_DIR "D:/Libraries/SDL2")
-
-include_directories("${SDL2_DIR}/SDL2_image-2.0.1/include")
-include_directories("${SDL2_DIR}/SDL2-2.0.5/include")
-include_directories("${SDL2_DIR}/SDL2_ttf-2.0.14/include")
-
-set(SDL2_LIBRARY
-      ${SDL2_DIR}/SDL2-2.0.5/lib/x64/SDL2.lib
-      ${SDL2_DIR}/SDL2-2.0.5/lib/x64/SDL2main.lib
-      ${SDL2_DIR}/SDL2_ttf-2.0.14/lib/x64/SDL2_ttf.lib
-      ${SDL2_DIR}/SDL2_image-2.0.1/lib/x64/SDL2_image.lib )
 
 set( PROJECT_SOURCE_FILES
        include/main.cpp
@@ -47,10 +30,10 @@ set( PROJECT_SOURCE_FILES
        include/core/src/PlayerData.cpp
        include/core/src/RandomGenerator.cpp
        include/core/src/Resources.cpp
-       include/characters/src/Character.cpp 
-       include/characters/src/Archer.cpp 
-       include/characters/src/Viking.cpp 
-       include/characters/src/Traits.cpp 
+       include/characters/src/Character.cpp
+       include/characters/src/Archer.cpp
+       include/characters/src/Viking.cpp
+       include/characters/src/Traits.cpp
        include/characters/src/Inventory.cpp
        include/enemies/src/Enemy.cpp
        include/items/src/Item.cpp
@@ -70,15 +53,26 @@ set( PROJECT_SOURCE_FILES
        include/world/src/MovingObject.cpp
        include/world/src/NPC.cpp
        include/world/src/Object.cpp
-       include/world/src/Player.cpp )
+       include/world/src/Player.cpp
+      )
 
 file(GLOB_RECURSE HEADER_FILES "*.h")
 
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_FILES} ${HEADER_FILES})
+
+target_include_directories(${PROJECT_NAME}
+  PRIVATE
+    "include"
+    "ext/SDL2/include"
+    "ext/SDL2_image"
+    ${SDL_TTF_INCLUDE_DIR}
+    ${OPENGL_INCLUDE_DIR}
+  )
 
 # The below macro was shamelessly stolen from:
 # https://cmake.org/pipermail/cmake/2013-November/056336.html
 
-# Organize the files in visual studio folders, according to 
+# Organize the files in visual studio folders, according to
 # the organization in the file systems
 macro(GroupSources curdir)
   file(GLOB children RELATIVE ${PROJECT_SOURCE_DIR}/${curdir} ${PROJECT_SOURCE_DIR}/${curdir}/*)
@@ -95,6 +89,6 @@ endmacro()
 # Execute the macro
 GroupSources("include")
 
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_FILES} ${HEADER_FILES})
-
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${SDL2_LIBRARY})
+target_link_directories(${PROJECT_NAME} PRIVATE ${SDL_TTF_LIB_DIR_x64})
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} SDL2 SDL2_image SDL2_ttf.lib)
+#target_link_options(${PROJECT_NAME} PRIVATE "/entry:mainCRTStartup")

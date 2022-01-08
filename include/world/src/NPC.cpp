@@ -1,7 +1,7 @@
 #include "world/inc/NPC.h"
 
-NPC::NPC(Texture* _tex, string _name, int _x_tile_index, int _y_tile_index, int _behaviour, string _dialogue)
-	: MovingObject(_tex, _name, _x_tile_index, _y_tile_index, 0, 0, 0, 0, SDL_Rect{0,0,32,32}),
+NPC::NPC(Texture* _tex, string _name, int _x_tile_index, int _y_tile_index, float* curr_dt, int _behaviour, string _dialogue)
+	: MovingObject(_tex, _name, _x_tile_index, _y_tile_index, 0, 0, 0, 0, SDL_Rect{0,0,32,32}, curr_dt),
 	  behaviour{_behaviour}
 {
 	if(_dialogue == "")
@@ -10,7 +10,7 @@ NPC::NPC(Texture* _tex, string _name, int _x_tile_index, int _y_tile_index, int 
 		should_generate_dialogues = true;
 	}
 	dialogue = _dialogue;
-	
+
 	//initialize random personality
 	personality = { (bool)(generateRand() % 2), (bool)(generateRand() % 2), (bool)(generateRand() % 2) };
 }
@@ -19,7 +19,7 @@ void NPC::frame()
 {
 	want_to_move = false;
 	animation_state = moving ? ANIM_WALK : ANIM_IDLE;
-	
+
 	//Perform NPC motion between tiles
 	if(moving)
 	{
@@ -38,17 +38,17 @@ void NPC::frame()
 			moving = false;
 		}
 	}
-	
+
 	animate();
-	
-	action_timer += curr_dt;
-	
+
+	action_timer += *curr_dt;
+
 	if(behaviour == LOOKER && action_timer > 3.0 && !moving && generateRand() % 100 < 1)
 	{
 		direction = generateRand() % 4 + 1;
 		action_timer = 0.0;
 	}
-	
+
 	if(behaviour == MOVER && action_timer > 3.0 && !moving && generateRand() % 100 < 1)
 	{
 		direction = generateRand() % 4 + 1;
@@ -56,9 +56,9 @@ void NPC::frame()
 		animation_state = ANIM_WALK;
 		action_timer = 0.0;
 	}
-	
+
 	if(annoyed_level > 0)
-		annoyed_level = max(annoyed_level - curr_dt / 2, 0.0f);
+		annoyed_level = max(annoyed_level - *curr_dt / 2, 0.0f);
 }
 
 bool NPC::generates_dialogues()

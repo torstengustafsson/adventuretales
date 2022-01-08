@@ -8,7 +8,7 @@ MainMenu::MainMenu(Resources* _res, PlayerData* _pd, function<void(bool, string)
 
 void MainMenu::render()
 {
-	Texture* menu = resources->get_texture(data_path + "/sprites/menu/main_menu.png");
+	Texture* menu = resources->get_texture("../data/sprites/menu/main_menu.png");
 	menu->render(0, 0);
 }
 
@@ -30,8 +30,10 @@ void MainMenu::handle_action()
 	{
 		//do stuff
 	}
-	if(marked_pos == 4)
-		quit = true;
+	if (marked_pos == 4)
+	{
+		//quit = true;
+	}
 }
 
 void MainMenu::handle_input()

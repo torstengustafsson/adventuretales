@@ -4,27 +4,27 @@ GameController::GameController(Player* _player, Resources* _res)
 {
 	resources = _res;
 	player = _player;
-	
-	map_handler = unique_ptr<MapHandler>(new MapHandler(resources, bind(&GameController::get_objects, this)));
+
+	map_handler = unique_ptr<MapHandler>(new MapHandler(resources, bind(&GameController::get_objects, this), &curr_dt));
 	player_data = unique_ptr<PlayerData>(new PlayerData(resources));
 	menus["worldmenu"] = unique_ptr<Menu>(new MenuWorld(
 						resources,
-						player_data.get(), 
+						player_data.get(),
 						bind(&GameController::set_game_paused, this, _1, _2 )
 				 ) );
 	menus["interactionmenu"] = unique_ptr<Menu>(new InteractionMenu(
 						resources,
 						bind(&GameController::set_game_paused, this, _1, _2 )
 				 ) );
-	
+
 	input_handler = unique_ptr<InputHandler>(new InputHandler(
 						bind(&GameController::set_game_paused, this, _1, _2),
 						bind(&GameController::interact, this, _1, _2),
 						player )
 	);
-	
+
 	set_map(1);
-	
+
 	//Generate two test characters
 	int id = player_data->add_character("Archer");
 	for(int i = 0; i++ < 7;)
@@ -47,28 +47,28 @@ GameController::GameController(Player* _player, Resources* _res)
 	for( auto& i : get_character(id)->get_inventory() )
 	{
 		tie(item_icon, item_name, item_type, item_inner_type, item_value) = i;
-		cout << "  '" << item_name << "' Type: " << item_type << " - " << item_inner_type << "\n"; 
+		cout << "  '" << item_name << "' Type: " << item_type << " - " << item_inner_type << "\n";
 	}
 	const auto& characters = player_data->get_characters();
 	if(dynamic_cast<Viking*>(characters[0].get()))
-		player->change_texture(resources->get_texture(data_path + "/sprites/world/characters/character_viking.png"));
+		player->change_texture(resources->get_texture("../data/sprites/world/characters/character_viking.png"));
 	if(dynamic_cast<Archer*>(characters[0].get()))
-		player->change_texture(resources->get_texture(data_path + "/sprites/world/characters/character_archer.png"));
+		player->change_texture(resources->get_texture("../data/sprites/world/characters/character_archer.png"));
 	//if(dynamic_cast<Knight*>(characters[0].get()))
-	//	player->change_texture(resources->get_texture(data_path + "/sprites/world/characters/character_knight.png"));
+	//	player->change_texture(resources->get_texture("../data/sprites/world/characters/character_knight.png"));
 	cout << "\n";
 }
 
 // Change the currently loaded map to the map specified by the argument val.
-// Objects state in previously loaded maps are still stored in the MapHandler object. 
+// Objects state in previously loaded maps are still stored in the MapHandler object.
 void GameController::set_map(int val)
 {
 	load_time = true;
 	int player_start_x, player_start_y;
-	
+
 	//Load the current map
 	vector<Object*> v = map_handler->get_map(val, player_start_x, player_start_y);
-	
+
 	//Check if player comes from a door
 	if(door_teleport_x != -1)
 	{
@@ -80,14 +80,14 @@ void GameController::set_map(int val)
 		player->set_x_tile(player_start_x);
 		player->set_y_tile(player_start_y);
 	}
-	
+
 	player->set_x(player->get_x_tile() * 32);
 	player->set_y(player->get_y_tile() * 32);
-	
+
 	object_list.clear(); //MapHandler handles removal of the actual objects. We just need to clear pointers.
 	copy(v.begin(), v.end(), back_inserter(object_list));
 	object_list.push_back(player);
-	
+
 	door_locations.clear();
 	for (auto& o : object_list)
 		if(Door* d = dynamic_cast<Door*>(o))
@@ -98,7 +98,7 @@ void GameController::set_map(int val)
 vector<Object*> GameController::get_objects()
 {
 	vector<Object*> nearby_objects;
-	
+
 	copy_if(object_list.begin(), object_list.end(), back_inserter(nearby_objects),
 		[this](Object* const & o)
 		{
@@ -107,7 +107,7 @@ vector<Object*> GameController::get_objects()
 				   player->get_y_tile() > o->get_y_tile() - 12 &&
 				   player->get_y_tile() < o->get_y_tile() + 12;
 		});
-	
+
 	return nearby_objects;
 }
 
@@ -136,7 +136,7 @@ void GameController::interact(int x, int y)
 			auto npc = dynamic_cast<NPC*>(o);
 			if(npc && npc->generates_dialogues())
 			{
-				npc->set_dialogue(diag.generate_dialogue(o->get_name(), npc->get_personality(), 
+				npc->set_dialogue(diag.generate_dialogue(o->get_name(), npc->get_personality(),
 						npc->get_annoyed_level(), player_data->get_main_character()));
 			}
 			string interaction = o->interact(dir + (dir % 2 == 0 ? -1 : 1) );
@@ -195,7 +195,7 @@ void GameController::frame()
 {
 	//one frame load time is enough
 	load_time = false;
-	
+
 	//check if player entered a door
 	for(auto& d : door_locations)
 	{
@@ -207,15 +207,15 @@ void GameController::frame()
 			set_map(d->get_door_map());
 		}
 	}
-	
-	
+
+
 	if(!game_paused && !load_time)
 	{
 		player->perform_actions();
-		
+
 		//handle keyboard input
 		input_handler->handle_input();
-		
+
 		//handle per-frame computation for NPCs
 		for(auto& o : get_objects())
 		{
@@ -237,7 +237,7 @@ void GameController::frame()
 			}
 		}
 	}
-	
+
 	curr_dt = static_cast<float>(SDL_GetTicks()) / 1000 - curr_time;
 	curr_time = static_cast<float>(SDL_GetTicks()) / 1000;
 	//cout << curr_dt << "\n";
